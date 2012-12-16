@@ -1,0 +1,23 @@
+{
+  "name": "quest-aws",
+  "description": "aws request signing plugin for quest",
+  "version": "0.1.0",
+  "author": "clever team <tech@getclever.com>",
+  "dependencies": {
+    "underscore": "~1.4.2"
+  },
+  "devDependencies": {
+    "node-dev": "~0.2.8",
+    "mocha": "~1.6.0",
+    "quest": "0.1.4"
+
+  },
+  "engines": {
+    "node": ">=0.8.x",
+    "npm": ">=1.1.5"
+  },
+  "scripts": {
+    "test": "make -B test",
+    "test-cov": "make -B test-cov"
+  }
+}
