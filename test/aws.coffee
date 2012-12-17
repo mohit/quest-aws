@@ -1,4 +1,5 @@
 aws = require "#{__dirname}/../index"
+quest = require "#{__dirname}/../../../quest/index"
 assert = require 'assert'
 
 describe 'quest', ->
@@ -20,9 +21,63 @@ describe 'quest', ->
         headers: 
           "X-Amz-Meta-Author": 'foo@bar.com',
           "X-Amz-Magic": 'abracadabra',
-          "Content-Type": 'text/html',
-          "Content-Md5": 'c8fdb181845a4ca6b8fec737b3581d76'
-          Date:  'Thu, 17 Nov 2005 18:49:58 GMT',
+          "content-type": 'text/html',
+          "content-md5": 'c8fdb181845a4ca6b8fec737b3581d76'
+          "date":  'Thu, 17 Nov 2005 18:49:58 GMT',
 
-      assert.equal aws.awsSignature(options), 'AWS 44CF9590006BF252F707:jZNOcbfWmD/A/f3hSvVzXZjM2HU='
+      assert.equal aws.handlers.awsSignature(options), 'AWS 44CF9590006BF252F707:jZNOcbfWmD/A/f3hSvVzXZjM2HU='
       done()
+
+    it 'put document using a signed aws request', (done) ->
+    
+      options = 
+        uri: "https://s3.amazonaws.com/#{process.env.AWS_BUCKET}/test",
+        method: 'PUT'
+        body: "this is a test text file"
+        aws: 
+          key: process.env.AWS_KEY
+          secret: process.env.AWS_SECRET
+        headers: 
+          "accept": 'text/html'
+          "content-type": "text/plain"
+      
+      quest.use aws
+      quest options, (err, resp, body) ->
+        assert not err, "Has error #{err}"
+        assert.equal resp?.statusCode, 200, "Status code should be 200, is #{resp?.statusCode}"
+        done()
+
+    it 'make signed get request', (done) ->
+    
+      options = 
+        uri: "https://s3.amazonaws.com/#{process.env.AWS_BUCKET}/test",
+        method: 'GET'
+        aws: 
+          key: process.env.AWS_KEY
+          secret: process.env.AWS_SECRET
+        headers: 
+          "accept": 'text/html'
+      
+      quest.use aws
+      quest options, (err, resp, body) ->
+        assert not err, "Has error #{err}"
+        assert.equal resp?.statusCode, 200, "Status code should be 200, is #{resp?.statusCode}"
+        assert.equal body, "this is a test text file"
+        done()
+
+    it 'remove test file from aws', (done) ->
+    
+      options = 
+        uri: "https://s3.amazonaws.com/#{process.env.AWS_BUCKET}/test",
+        method: 'DELETE'
+        aws: 
+          key: process.env.AWS_KEY
+          secret: process.env.AWS_SECRET
+        headers: 
+          "accept": 'text/html'
+      
+      quest.use aws
+      quest options, (err, resp, body) ->
+        assert not err, "Has error #{err}"
+        assert.equal resp?.statusCode, 204, "Status code should be 204, is #{resp?.statusCode}"
+        done()

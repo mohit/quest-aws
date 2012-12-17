@@ -7,29 +7,28 @@ parse = url.parse
 SIGNING_METHOD = "sha1"
 
 awsSignature = (options) ->
+
   signingString = stringToSign(options)
   signature = crypto.createHmac(SIGNING_METHOD, options.aws.secret).update(signingString).digest('base64')
 
   # add authorization header to the request
   options.headers.authorization = "AWS " + options.aws.key + ":" + signature
 
-  console.log options.headers.authorization
-
   return options.headers.authorization 
 
 stringToSign = (options) ->
 
+  options.headers['date'] = new Date().toUTCString() if not options.headers.date?
+
   # ordered string used for as secret in the Authorization header
   signingString = [ 
-    options.method,
-    options.headers['Content-Md5'],
-    options.headers['Content-Type'],
-    options.headers['Date']
+    options.method.toUpperCase(),
+    options.headers['content-md5'] ? '',
+    options.headers['content-type'] ? '',
+    options.headers['date']
   ]
-
   for header in canonicalizeAmazonHeaders(options)
     signingString.push(header)
-
   signingString.push(parse(options.uri).pathname)
 
   return signingString.join('\n')
@@ -40,5 +39,5 @@ canonicalizeAmazonHeaders = (options) ->
   return headers
 
 aws = {}
-aws.awsSignature = awsSignature
+aws.handlers = awsSignature: awsSignature
 module.exports = aws 
