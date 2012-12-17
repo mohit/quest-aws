@@ -4,13 +4,13 @@
   "version": "0.1.0",
   "author": "clever team <tech@getclever.com>",
   "dependencies": {
-    "underscore": "~1.4.2"
+    "underscore": "~1.4.2",
+    "coffee-script": "~1.4.0"
   },
   "devDependencies": {
     "node-dev": "~0.2.8",
     "mocha": "~1.6.0",
-    "quest": "0.1.4"
-
+    "quest": "git://github.com/m0hit/quest#add_plugins"
   },
   "engines": {
     "node": ">=0.8.x",

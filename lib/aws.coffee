@@ -13,7 +13,6 @@ awsSignature = (options) ->
 
   # add authorization header to the request
   options.headers.authorization = "AWS " + options.aws.key + ":" + signature
-
   return options.headers.authorization 
 
 stringToSign = (options) ->
