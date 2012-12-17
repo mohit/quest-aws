@@ -1,12 +1,12 @@
 aws = require "#{__dirname}/../index"
-quest = require "#{__dirname}/../../../quest/index"
+quest = require 'quest'
 assert = require 'assert'
 
 describe 'quest', ->
   safe_err = (err) ->
     err = new Error err if err? and err not instanceof Error
     err
-  describe "signing", ->
+  describe 'signing', ->
     it 'test signing', (done) ->
     
       # Example request from 
@@ -16,8 +16,8 @@ describe 'quest', ->
         uri: "https://aws.amazon.com/quotes/nelson",
         method: 'PUT'
         aws: 
-          key: "44CF9590006BF252F707",
-          secret: "OtxrzxIsfpFjA7SwPzILwy8Bw21TLhquhboDYROV",
+          key: '44CF9590006BF252F707',
+          secret: 'OtxrzxIsfpFjA7SwPzILwy8Bw21TLhquhboDYROV',
         headers: 
           "X-Amz-Meta-Author": 'foo@bar.com',
           "X-Amz-Magic": 'abracadabra',
@@ -39,7 +39,7 @@ describe 'quest', ->
           secret: process.env.AWS_SECRET
         headers: 
           "accept": 'text/html'
-          "content-type": "text/plain"
+          "content-type": 'text/plain'
       
       quest.use aws
       quest options, (err, resp, body) ->
